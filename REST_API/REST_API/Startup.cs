@@ -38,6 +38,9 @@ namespace REST_API
         private static void SubscribeToMqtt()
         {
             TemperatureSubscriber.Subscribe();
+            AccelerometerSubscriber.Subscribe();
+            AirpressureSubscriber.Subscribe();
+            HumiditySubScriber.Subscribe();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
