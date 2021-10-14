@@ -1,16 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using REST_API.MQTT;
 
 namespace REST_API
@@ -32,6 +25,7 @@ namespace REST_API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "REST_API", Version = "v1" });
             });
+            services.AddDbContext<EFDataContext>();
 
             MqttSettings settings = new MqttSettings();
             Configuration.GetSection(nameof(MqttSettings)).Bind(settings);
