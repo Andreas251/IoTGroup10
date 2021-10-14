@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
@@ -7,15 +9,15 @@ namespace REST_API.MQTT
 {
     public class TemperatureSubscriber
     {
-        private const string MqttUri = "626582a1d37a4c9da269c096cf520060.s1.eu.hivemq.cloud";
-        private const int port = 8883;
-        public static void Subscribe()
+        public static void Subscribe(MqttSettings settings)
         {
-            var client = new MqttClient(MqttUri, port, true, null, null, MqttSslProtocols.TLSv1_2);
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+
+            var client = new MqttClient(settings.URI, settings.Port, settings.isSecure, null, null, MqttSslProtocols.TLSv1_2);
             client.MqttMsgPublishReceived += HandlePublishedMessage;
             var clientId = Guid.NewGuid().ToString();
 
-            client.Connect(clientId, "iotgrp10", "Faelles123kode098");
+            client.Connect(clientId, settings.Username, settings.Password);
 
             client.Subscribe(new[] { "iot_grp10/temp" }, new[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
         }

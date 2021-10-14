@@ -32,15 +32,20 @@ namespace REST_API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "REST_API", Version = "v1" });
             });
-            SubscribeToMqtt();
+
+            MqttSettings settings = new MqttSettings();
+            Configuration.GetSection(nameof(MqttSettings)).Bind(settings);
+
+            SubscribeToMqtt(settings);
+
         }
 
-        private static void SubscribeToMqtt()
+        private static void SubscribeToMqtt(MqttSettings settings)
         {
-            TemperatureSubscriber.Subscribe();
-            AccelerometerSubscriber.Subscribe();
-            AirpressureSubscriber.Subscribe();
-            HumiditySubScriber.Subscribe();
+            TemperatureSubscriber.Subscribe(settings);
+            AccelerometerSubscriber.Subscribe(settings);
+            AirpressureSubscriber.Subscribe(settings);
+            HumiditySubScriber.Subscribe(settings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
