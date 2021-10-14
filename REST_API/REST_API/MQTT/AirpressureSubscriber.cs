@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace REST_API.MQTT
 {
-    public class TemperatureSubscriber
+    public class AirpressureSubscriber
     {
         public static void Subscribe(MqttSettings settings)
         {
@@ -19,7 +17,7 @@ namespace REST_API.MQTT
 
             client.Connect(clientId, settings.Username, settings.Password);
 
-            client.Subscribe(new[] { "iot_grp10/temp" }, new[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+            client.Subscribe(new[] { "iot_grp10/airpressure" }, new[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
         }
 
         static void HandlePublishedMessage(object sender, MqttMsgPublishEventArgs e)
