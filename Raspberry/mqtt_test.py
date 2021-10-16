@@ -1,4 +1,14 @@
 import paho.mqtt.client as mqtt
+from enum import Enum
+
+class TopicURI(Enum):
+    Root = "iot_grp10"
+    TemperatureURI =    Root + "/temp"
+    HumidityURI =       Root + "/humidity"
+    AirPressureURI =    Root + "/airpressure"
+    AccelerometerURI =  Root + "/accelerometer"
+    GyroscopeURI =      Root + "/gyroscope"
+    MagnetometerURI =   Root + "/magnetometer"
 
 pw = "Faelles123kode098"
 username = "iotgrp10"
@@ -15,8 +25,9 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print("Received message: " + msg.topic + " -> " + msg.payload.decode("utf-8"))
 
+
 # create the client
-client = mqtt.Client()
+client = mqtt.Client()  
 client.on_connect = on_connect
 client.on_message = on_message
 
@@ -29,12 +40,14 @@ client.username_pw_set(username, pw)
 # connect to HiveMQ Cloud on port 8883
 client.connect(mqqt_uri, 8883)
 
+print("Subscribing")
 # subscribe to the topic "my/test/topic"
 client.subscribe("my/test/topic")
-
+print("Publishing")
 # publish "Hello" to the topic "my/test/topic"
-client.publish("my/test/topic", "Hello")
+client.publish("my/test/topic", "Raspberry Pi Turned On.")
 
+print("Looping forever.")
 # Blocking call that processes network traffic, dispatches callbacks and handles reconnecting.
 client.loop_forever()
 
