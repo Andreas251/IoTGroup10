@@ -32,7 +32,7 @@ namespace REST_API.MQTT
             {
                 SensorId = measurement.sensorId,
                 Timestamp = DateTimeOffset.Parse(measurement.timestamp),
-                Airpressure = measurement.value
+                Airpressure = double.Parse(measurement.value.ToString())
             };
 
             using (var context = new EFDataContext())

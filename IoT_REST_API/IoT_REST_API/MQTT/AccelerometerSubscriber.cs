@@ -1,4 +1,5 @@
-﻿using REST_API.Models;
+﻿using IoT_REST_API.Models;
+using REST_API.Models;
 using System;
 using System.Text;
 using System.Text.Json;
@@ -27,12 +28,15 @@ namespace REST_API.MQTT
             var message = Encoding.UTF8.GetString(e.Message);
             // handle message received 
             var measurement = JsonSerializer.Deserialize<Measurement>(message);
-
+            AccelData accelData = JsonSerializer.Deserialize<AccelData>(measurement.value.ToString());
             var reading = new AccelerometerReading
             {
                 SensorId = measurement.sensorId,
                 Timestamp = DateTimeOffset.Parse(measurement.timestamp),
-                Accelerometer = measurement.value
+                Accelerometer = 0, // TODO FIX - have andy do new migrations n such
+                X = accelData.x,
+                Y = accelData.y,
+                Z = accelData.z,
             };
 
             using (var context = new EFDataContext())

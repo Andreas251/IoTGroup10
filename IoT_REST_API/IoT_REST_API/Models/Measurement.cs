@@ -9,6 +9,6 @@ namespace REST_API.Models
     {
         public Guid sensorId { get; set; }
         public string timestamp { get; set; }
-        public double value { get; set; }
+        public dynamic value { get; set; }
     }
 }
