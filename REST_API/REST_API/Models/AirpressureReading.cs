@@ -13,6 +13,7 @@ namespace REST_API.Models
         public DateTimeOffset Timestamp { get; set; }
         [Required]
         public double Airpressure { get; set; }
-        
+        [Required]
+        public double SensorId { get; set; }
     }
 }
