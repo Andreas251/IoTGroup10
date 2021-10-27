@@ -14,6 +14,6 @@ namespace REST_API.Models
         [Required]
         public double Humidity { get; set; }
         [Required]
-        public double SensorId { get; set; }
+        public Guid SensorId { get; set; }
     }
 }

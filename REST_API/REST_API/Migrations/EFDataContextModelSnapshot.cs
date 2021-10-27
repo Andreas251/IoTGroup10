@@ -29,8 +29,8 @@ namespace REST_API.Migrations
                     b.Property<double>("Accelerometer")
                         .HasColumnType("float");
 
-                    b.Property<double>("SensorId")
-                        .HasColumnType("float");
+                    b.Property<Guid>("SensorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("Timestamp")
                         .HasColumnType("datetimeoffset");
@@ -50,8 +50,8 @@ namespace REST_API.Migrations
                     b.Property<double>("Airpressure")
                         .HasColumnType("float");
 
-                    b.Property<double>("SensorId")
-                        .HasColumnType("float");
+                    b.Property<Guid>("SensorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("Timestamp")
                         .HasColumnType("datetimeoffset");
@@ -71,8 +71,8 @@ namespace REST_API.Migrations
                     b.Property<double>("Humidity")
                         .HasColumnType("float");
 
-                    b.Property<double>("SensorId")
-                        .HasColumnType("float");
+                    b.Property<Guid>("SensorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("Timestamp")
                         .HasColumnType("datetimeoffset");
@@ -89,8 +89,8 @@ namespace REST_API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("SensorId")
-                        .HasColumnType("float");
+                    b.Property<Guid>("SensorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("Temperature")
                         .HasColumnType("float");

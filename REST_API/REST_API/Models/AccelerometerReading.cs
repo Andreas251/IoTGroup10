@@ -14,7 +14,7 @@ namespace REST_API.Models
         [Required]
         public double Accelerometer { get; set; }
         [Required]
-        public double SensorId { get; set; }
+        public Guid SensorId { get; set; }
         
     }
 }
