@@ -2,14 +2,11 @@
 using System.Text;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
-using System.Text.Json;
-using REST_API.Models;
 
 namespace REST_API.MQTT
 {
-    public class TemperatureSubscriber
+    public class AccelerometerSubscriber
     {
-
         public static void Subscribe(MqttSettings settings)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));
@@ -20,30 +17,13 @@ namespace REST_API.MQTT
 
             client.Connect(clientId, settings.Username, settings.Password);
 
-            client.Subscribe(new[] { "iot_grp10/temp" }, new[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+            client.Subscribe(new[] { "iot_grp10/accelerometer" }, new[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
         }
 
         static void HandlePublishedMessage(object sender, MqttMsgPublishEventArgs e)
         {
             var message = Encoding.UTF8.GetString(e.Message);
             // handle message received 
-            var measurement = JsonSerializer.Deserialize<Measurement>(message);
-
-            var tempReading = new TemperatureReading
-            {
-                SensorId = measurement.sensorId,
-                Timestamp = DateTimeOffset.Parse(measurement.timestamp),
-                Temperature = measurement.value
-            };
-
-            using(var context = new EFDataContext())
-            {
-                context.Add(tempReading);
-                context.SaveChanges();
-            }
-            
         }
-
-
     }
 }
