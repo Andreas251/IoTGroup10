@@ -29,7 +29,7 @@ namespace REST_API.MQTT
             // handle message received 
             var measurement = JsonSerializer.Deserialize<Measurement>(message);
 
-            var tempReading = new TemperatureReading
+            var reading = new TemperatureReading
             {
                 SensorId = measurement.sensorId,
                 Timestamp = DateTimeOffset.Parse(measurement.timestamp),
@@ -38,7 +38,7 @@ namespace REST_API.MQTT
 
             using(var context = new EFDataContext())
             {
-                context.Add(tempReading);
+                context.Add(reading);
                 context.SaveChanges();
             }
             

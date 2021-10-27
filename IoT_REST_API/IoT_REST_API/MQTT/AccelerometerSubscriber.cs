@@ -1,5 +1,7 @@
-﻿using System;
+﻿using REST_API.Models;
+using System;
 using System.Text;
+using System.Text.Json;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
@@ -24,6 +26,20 @@ namespace REST_API.MQTT
         {
             var message = Encoding.UTF8.GetString(e.Message);
             // handle message received 
+            var measurement = JsonSerializer.Deserialize<Measurement>(message);
+
+            var reading = new AccelerometerReading
+            {
+                SensorId = measurement.sensorId,
+                Timestamp = DateTimeOffset.Parse(measurement.timestamp),
+                Accelerometer = measurement.value
+            };
+
+            using (var context = new EFDataContext())
+            {
+                context.Add(reading);
+                context.SaveChanges();
+            }
         }
     }
 }
