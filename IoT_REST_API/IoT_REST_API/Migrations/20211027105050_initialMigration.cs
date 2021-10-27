@@ -3,16 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IoT_REST_API.Migrations
 {
-    public partial class Mig1 : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "dbo");
-
             migrationBuilder.CreateTable(
-                name: "AccelerometerReading",
-                schema: "dbo",
+                name: "AccelerometerReadings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -23,12 +19,11 @@ namespace IoT_REST_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccelerometerReading", x => x.Id);
+                    table.PrimaryKey("PK_AccelerometerReadings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AirpressureReading",
-                schema: "dbo",
+                name: "AirpressureReadings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -39,12 +34,11 @@ namespace IoT_REST_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AirpressureReading", x => x.Id);
+                    table.PrimaryKey("PK_AirpressureReadings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "HumidityReading",
-                schema: "dbo",
+                name: "HumidityReadings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -55,12 +49,11 @@ namespace IoT_REST_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HumidityReading", x => x.Id);
+                    table.PrimaryKey("PK_HumidityReadings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TemperatureReading",
-                schema: "dbo",
+                name: "TemperatureReadings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -71,27 +64,23 @@ namespace IoT_REST_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TemperatureReading", x => x.Id);
+                    table.PrimaryKey("PK_TemperatureReadings", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AccelerometerReading",
-                schema: "dbo");
+                name: "AccelerometerReadings");
 
             migrationBuilder.DropTable(
-                name: "AirpressureReading",
-                schema: "dbo");
+                name: "AirpressureReadings");
 
             migrationBuilder.DropTable(
-                name: "HumidityReading",
-                schema: "dbo");
+                name: "HumidityReadings");
 
             migrationBuilder.DropTable(
-                name: "TemperatureReading",
-                schema: "dbo");
+                name: "TemperatureReadings");
         }
     }
 }

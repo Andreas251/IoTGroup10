@@ -10,8 +10,8 @@ using REST_API;
 namespace IoT_REST_API.Migrations
 {
     [DbContext(typeof(EFDataContext))]
-    [Migration("20211027103559_Mig1")]
-    partial class Mig1
+    [Migration("20211027105050_initialMigration")]
+    partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,7 +39,7 @@ namespace IoT_REST_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AccelerometerReading", "dbo");
+                    b.ToTable("AccelerometerReadings");
                 });
 
             modelBuilder.Entity("REST_API.Models.AirpressureReading", b =>
@@ -60,7 +60,7 @@ namespace IoT_REST_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AirpressureReading", "dbo");
+                    b.ToTable("AirpressureReadings");
                 });
 
             modelBuilder.Entity("REST_API.Models.HumidityReading", b =>
@@ -81,7 +81,7 @@ namespace IoT_REST_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HumidityReading", "dbo");
+                    b.ToTable("HumidityReadings");
                 });
 
             modelBuilder.Entity("REST_API.Models.TemperatureReading", b =>
@@ -102,7 +102,7 @@ namespace IoT_REST_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TemperatureReading", "dbo");
+                    b.ToTable("TemperatureReadings");
                 });
 #pragma warning restore 612, 618
         }
