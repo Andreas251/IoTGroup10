@@ -10,8 +10,8 @@ using REST_API;
 namespace REST_API.Migrations
 {
     [DbContext(typeof(EFDataContext))]
-    [Migration("20211027090944_sensor-id-added")]
-    partial class sensoridadded
+    [Migration("20211027093833_migration-of-database")]
+    partial class migrationofdatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,8 +31,8 @@ namespace REST_API.Migrations
                     b.Property<double>("Accelerometer")
                         .HasColumnType("float");
 
-                    b.Property<double>("SensorId")
-                        .HasColumnType("float");
+                    b.Property<Guid>("SensorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("Timestamp")
                         .HasColumnType("datetimeoffset");
@@ -52,8 +52,8 @@ namespace REST_API.Migrations
                     b.Property<double>("Airpressure")
                         .HasColumnType("float");
 
-                    b.Property<double>("SensorId")
-                        .HasColumnType("float");
+                    b.Property<Guid>("SensorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("Timestamp")
                         .HasColumnType("datetimeoffset");
@@ -73,8 +73,8 @@ namespace REST_API.Migrations
                     b.Property<double>("Humidity")
                         .HasColumnType("float");
 
-                    b.Property<double>("SensorId")
-                        .HasColumnType("float");
+                    b.Property<Guid>("SensorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("Timestamp")
                         .HasColumnType("datetimeoffset");
@@ -91,8 +91,8 @@ namespace REST_API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("SensorId")
-                        .HasColumnType("float");
+                    b.Property<Guid>("SensorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("Temperature")
                         .HasColumnType("float");

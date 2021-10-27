@@ -3,26 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace REST_API.Migrations
 {
-    public partial class addedmodels : Migration
+    public partial class migrationofdatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Temperature",
-                schema: "dbo",
-                table: "Temperature");
-
-            migrationBuilder.RenameTable(
-                name: "Temperature",
-                schema: "dbo",
-                newName: "TemperatureReading",
-                newSchema: "dbo");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_TemperatureReading",
-                schema: "dbo",
-                table: "TemperatureReading",
-                column: "Id");
+            migrationBuilder.EnsureSchema(
+                name: "dbo");
 
             migrationBuilder.CreateTable(
                 name: "AccelerometerReading",
@@ -32,7 +18,8 @@ namespace REST_API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Timestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Accelerometer = table.Column<double>(type: "float", nullable: false)
+                    Accelerometer = table.Column<double>(type: "float", nullable: false),
+                    SensorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,7 +34,8 @@ namespace REST_API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Timestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Airpressure = table.Column<double>(type: "float", nullable: false)
+                    Airpressure = table.Column<double>(type: "float", nullable: false),
+                    SensorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,11 +50,28 @@ namespace REST_API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Timestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Humidity = table.Column<double>(type: "float", nullable: false)
+                    Humidity = table.Column<double>(type: "float", nullable: false),
+                    SensorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HumidityReading", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TemperatureReading",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Timestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Temperature = table.Column<double>(type: "float", nullable: false),
+                    SensorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TemperatureReading", x => x.Id);
                 });
         }
 
@@ -84,22 +89,9 @@ namespace REST_API.Migrations
                 name: "HumidityReading",
                 schema: "dbo");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_TemperatureReading",
-                schema: "dbo",
-                table: "TemperatureReading");
-
-            migrationBuilder.RenameTable(
+            migrationBuilder.DropTable(
                 name: "TemperatureReading",
-                schema: "dbo",
-                newName: "Temperature",
-                newSchema: "dbo");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Temperature",
-                schema: "dbo",
-                table: "Temperature",
-                column: "Id");
+                schema: "dbo");
         }
     }
 }
