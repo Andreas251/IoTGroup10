@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace REST_API.Controllers
@@ -14,5 +16,15 @@ namespace REST_API.Controllers
             _logger = logger;
         }
 
+
+        [HttpPost]
+        [Route("injection")]
+        public void accelerometerSqlInjection(string injection)
+        {
+            using (var context = new EFDataContext())
+            {
+                var x = context.AccelerometerReadings.FromSqlRaw(injection).ToList();
+            }
+        }
     }
 }
