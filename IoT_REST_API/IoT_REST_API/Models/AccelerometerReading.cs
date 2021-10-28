@@ -10,8 +10,7 @@ namespace REST_API.Models
         public int Id { get; set; }
         [Required]
         public DateTimeOffset Timestamp { get; set; }
-        [Required]
-        public double Accelerometer { get; set; }
+
         [Required]
         public Guid SensorId { get; set; }
         [Required]

@@ -33,7 +33,6 @@ namespace REST_API.MQTT
             {
                 SensorId = measurement.sensorId,
                 Timestamp = DateTimeOffset.Parse(measurement.timestamp),
-                Accelerometer = 0, // TODO FIX - have andy do new migrations n such
                 X = accelData.x,
                 Y = accelData.y,
                 Z = accelData.z,
