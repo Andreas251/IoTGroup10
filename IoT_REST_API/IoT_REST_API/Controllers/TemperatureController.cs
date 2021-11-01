@@ -25,7 +25,7 @@ namespace IoT_REST_API.Controllers
         }
 
         [HttpGet]
-        [Route("latest")]
+        [Route("Latest")]
         public double GetLatestTemperature(Guid sensorId)
         {
             var reading = _context.TemperatureReadings.Where(p => p.SensorId == sensorId).OrderByDescending(p => p.Timestamp).FirstOrDefault();
