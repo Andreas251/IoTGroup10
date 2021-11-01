@@ -16,7 +16,6 @@ namespace REST_API.Controllers
             _logger = logger;
         }
 
-
         [HttpPost]
         [Route("injection")]
         public void accelerometerSqlInjection(string injection)
