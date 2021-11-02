@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using REST_API;
+using REST_API.Models;
+using IoT_REST_API.Extensions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -31,6 +31,13 @@ namespace IoT_REST_API.Controllers
             var reading = _context.TemperatureReadings.Where(p => p.SensorId == sensorId).OrderByDescending(p => p.Timestamp).FirstOrDefault();
             _logger.LogInformation($"Latest temperature for sensorId {sensorId} requested, value is: {reading.Temperature}");
             return reading.Temperature;
+        }
+
+        [HttpGet]
+        [Route("Readings")]
+        public IEnumerable<TemperatureReading> GetReadingsByTime(Guid sensorId, DateTime start, DateTime end)
+        {
+            return _context.TemperatureReadings.ReadingsWithinRange(sensorId, start, end);
         }
     }
 }

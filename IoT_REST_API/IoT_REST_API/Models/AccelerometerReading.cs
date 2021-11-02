@@ -1,10 +1,11 @@
-﻿using System;
+﻿using IoT_REST_API.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace REST_API.Models
 {
-    public class AccelerometerReading
+    public class AccelerometerReading : Reading
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
