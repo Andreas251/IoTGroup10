@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
-
-
+import requests
 
 
 url = ''
@@ -15,7 +14,7 @@ endpoints = {
 
 
 
-def get_input():
+def set_reading_type():
     
     user_input = ''
     type_of_reading = ''
@@ -52,7 +51,7 @@ def get_input():
 
 
 def main():
-    get_input()
+    set_reading_type()
     return 0
 
 
