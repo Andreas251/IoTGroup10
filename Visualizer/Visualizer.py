@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib
 import requests
-
+import datetime as dt
 
 url = 'https://localhost:44340/'
 
@@ -43,32 +43,24 @@ def set_reading_type():
 
 
 def get_reading(input):
-    response = requests.get(url + endpoints['_humReading'], verify=False)
+
+    #structure of the get parameters
+    params = {
+        'sensorId' : 'E34D3937-65D5-4DE1-A80E-E29F998D8967',
+        'start' : dt.datetime.now() - dt.timedelta(minutes = 40),
+        'end' : dt.datetime.now()
+    }
+
+
+
+    response = requests.get(url + endpoints['_humReading'],params=params, verify=False)
     print(response.status_code)
     print(response.json())
-    # return response.json()
+    
+    
+    return response.json()
 
-    dummy_data = [
-        {
-            "id": 0,
-            "timestamp": "2021-11-03T12:11:42.501Z",
-            "humidity": 0,
-            "sensorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-        },
-        {
-            "id": 0,
-            "timestamp": "2021-11-03T12:12:42.501Z",
-            "humidity": 1,
-            "sensorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-        },
-        {
-            "id": 0,
-            "timestamp": "2021-11-03T12:13:42.501Z",
-            "humidity": 2,
-            "sensorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-        },
-    ]
-    return dummy_data
+
 
 
 def convert_humidity_dataformat(data):
@@ -76,19 +68,21 @@ def convert_humidity_dataformat(data):
     humidity = []
     dates = []
     
-    for i in data:
+    for i in data[:10]:
+        print(i)
         humidity.append(i["humidity"])
-        print(humidity)
-
-        date = matplotlib.dates.date2num(i["timestamp"])
+        dt_date = dt.datetime.strptime(i['timestamp'], "%Y/%m/%d %H:%M:%S")
+        date = matplotlib.dates.date2num(dt_date)
+        #date = i["timestamp"]
+        
         dates.append(date)
 
     return humidity, dates
 
 
-def plot_reading(humidity, dates):
+def plot_reading(reading, dates):
 
-    plt.plot_date(dates, humidity)
+    plt.plot_date(dates, reading)
     plt.xlabel("Time")
     plt.xticks(rotation=10)
     plt.ylabel("Humidity")
@@ -100,7 +94,7 @@ def main():
     data = get_reading('tis')
     humidity, dates = convert_humidity_dataformat(data)
     plot_reading(humidity, dates)
-
+    
     return 0
 
 
