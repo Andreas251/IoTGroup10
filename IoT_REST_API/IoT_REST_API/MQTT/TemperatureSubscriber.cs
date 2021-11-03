@@ -28,15 +28,14 @@ namespace REST_API.MQTT
             var message = Encoding.UTF8.GetString(e.Message);
             // handle message received 
             var measurement = JsonSerializer.Deserialize<Measurement>(message);
-
             var reading = new TemperatureReading
             {
                 SensorId = measurement.sensorId,
                 Timestamp = DateTimeOffset.Parse(measurement.timestamp),
-                Temperature = measurement.value
+                Temperature = double.Parse((measurement.value.ToString()).Replace('.', ','))
             };
 
-            using(var context = new EFDataContext())
+            using (var context = new EFDataContext())
             {
                 context.Add(reading);
                 context.SaveChanges();
