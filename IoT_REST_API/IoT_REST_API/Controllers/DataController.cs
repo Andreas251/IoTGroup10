@@ -23,7 +23,7 @@ namespace REST_API.Controllers
 
         [HttpGet]
         [Route("Readings")]
-        public ReadingObject GetReadingsByTime(Guid sensorId, DateTime start, DateTime end)
+        public ReadingObject GetReadingsByTime(Guid? sensorId, DateTime start, DateTime end)
         {
             return new ReadingObject()
             {
