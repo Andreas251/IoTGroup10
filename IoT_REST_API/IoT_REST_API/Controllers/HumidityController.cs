@@ -25,7 +25,7 @@ namespace IoT_REST_API.Controllers
 
         [HttpGet]
         [Route("Readings")]
-        public IEnumerable<HumidityReading> GetReadingsByTime(Guid sensorId, DateTime start, DateTime end)
+        public IEnumerable<HumidityReading> GetReadingsByTime(Guid? sensorId, DateTime start, DateTime end)
         {
             return _context.HumidityReadings.ReadingsWithinRange(sensorId, start, end);
         }

@@ -26,16 +26,22 @@ namespace IoT_REST_API.Controllers
 
         [HttpGet]
         [Route("Latest")]
-        public double GetLatestTemperature(Guid sensorId)
+        public TemperatureReading GetLatestReading()
         {
-            var reading = _context.TemperatureReadings.Where(p => p.SensorId == sensorId).OrderByDescending(p => p.Timestamp).FirstOrDefault();
-            _logger.LogInformation($"Latest temperature for sensorId {sensorId} requested, value is: {reading.Temperature}");
-            return reading.Temperature;
+            return _context.TemperatureReadings.OrderByDescending(p => p.Timestamp).FirstOrDefault();
         }
 
         [HttpGet]
-        [Route("Readings")]
-        public IEnumerable<TemperatureReading> GetReadingsByTime(Guid sensorId, DateTime start, DateTime end)
+        [Route("LatestBySensor")]
+        public TemperatureReading GetLatestReadingBySensor(Guid sensorId)
+        {
+            var reading = _context.TemperatureReadings.Where(p => p.SensorId == sensorId).OrderByDescending(p => p.Timestamp).FirstOrDefault();
+            return reading;
+        }
+
+        [HttpGet]
+        [Route("ReadingsByTime")]
+        public IEnumerable<TemperatureReading> GetReadingsByTime(Guid? sensorId, DateTime start, DateTime end)
         {
             return _context.TemperatureReadings.ReadingsWithinRange(sensorId, start, end);
         }
