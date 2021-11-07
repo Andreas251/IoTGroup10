@@ -7,10 +7,13 @@ import datetime as dt
 url = 'https://localhost:44340/'
 
 endpoints = {
-    '_accReading' : 'api/',
-    '_airReading' : 'api/',
+    '_sensorList' : 'api/Sensor/Sensors',
+    '_accReading' : 'api/Accelerometer/Readings',
+    '_airReading' : 'api/AirPressure/Readings',
     '_humReading' : 'api/Humidity/Readings',
-    '_tmpReading' : 'api/'
+    '_tmpReading' : 'api​/Temperature​/Latest',
+    '_tmpReadingSensor': '/api/Temperature/LatestBySensor',
+    '_tmpReadingTime': '/api/Temperature/ReadingsByTime'
 }
 
 
