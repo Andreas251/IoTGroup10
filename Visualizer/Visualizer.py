@@ -17,9 +17,14 @@ endpoints = {
 
 
 def set_reading_type():
-    
-    user_input = ''
-    reading_endpoint = ''
+    user_inputs = {
+        "type_of_reading": "",
+        "sensor_id": "",
+        "latest": "", # y/n
+        "latest_by_sensor": "", # y/n
+        "start_time": "",
+        "end_time": ""
+    }
 
     print('--- Types of available readings ---\n')
     print('- Accelerometer \n')
@@ -27,20 +32,27 @@ def set_reading_type():
     print('- Humidity \n')
     print('- Temperature \n')
     print('-----------------------------------\n')
-    user_input = input('Input desired reading: ').lower()
-    
-    if(user_input == 'accelerometer'):
-        reading_endpoint = endpoints['_accReading']
-    elif(user_input == 'airpressure'):
-        reading_endpoint = endpoints['_airReading']
-    elif(user_input == 'humidity'):
-        reading_endpoint = endpoints['_humReading']
-    elif(user_input == 'temperature'):
-        reading_endpoint = endpoints['_tmpReading']
-    else:
-        reading_endpoint = 'default'
+    user_inputs["type_of_reading"] = input('Input desired reading: ').lower()
 
-    return reading_endpoint, user_input
+    user_inputs["latest"] = input('Do you want latest data? (y/n): ').lower() # check input
+
+    if user_inputs["latest"].lower() == "n":
+        user_inputs["start_time"] = input('Input desired start time of reading: ').lower() # check input
+        user_inputs["end_time"] = input('Input desired end time of reading: ').lower() # check input
+
+    user_inputs["latest_by_sensor"] = input('Do you want data from a specific sensor? (y/n): ').lower() # check input
+
+    if user_inputs["latest_by_sensor"].lower() == "y":
+        #Print sensors
+        user_inputs["sensor_id"] = input('Input desired sensorId: ').lower()
+
+    
+    
+
+    
+    
+
+    return user_inputs
 
 
 def get_reading(input):
