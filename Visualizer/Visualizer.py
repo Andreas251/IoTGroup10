@@ -52,30 +52,27 @@ def get_reading(input):
         'end' :   '2021-11-03 13:41:29.9502490'      #dt.datetime.now()
     }
 
-
-
     response = requests.get(url + endpoints['_humReading'],params=params, verify=False)
     print(dt.datetime.now())
     print(response.status_code)
     print(response.json())
     
-    
     return response.json()
 
 
-def convert_datetime(date_time):
+def convert_timestamp_format_old(date_time): # TODO: Remove when new works
     date_time = date_time.replace("T", " ")
     date_time = date_time.split("+")
     return date_time[0]
 
 
-def convert_humidity_dataformat(data):
+def convert_humidity_dataformat(data): # TODO: Remove when general function works
     humidity = []
     dates = []
     
     for i in data:
         humidity.append(i["humidity"])
-        converted = convert_datetime(i["timestamp"])
+        converted = convert_timestamp_format_old(i["timestamp"])
     
         dt_date = dt.datetime.strptime(converted, "%Y-%m-%d %H:%M:%S.%f")
         date = matplotlib.dates.date2num(dt_date)
@@ -83,6 +80,44 @@ def convert_humidity_dataformat(data):
         dates.append(date)
 
     return humidity, dates
+
+
+def convert_timestamp_format(timestamp): # NOT TESTED
+    """
+    Converts timestamp from string of C# DateTimeOffset received from the API to Python datetime.
+    """
+    timestamp = timestamp.replace("T", " ")
+    timestamp = timestamp.split("+")
+    dt_date = dt.datetime.strptime(timestamp[0], "%Y-%m-%d %H:%M:%S.%f")
+    return dt_date
+
+
+def convert_dataformat(data_collection, data_type): # NOT TESTED
+    """
+    data_collection: array of readings of a certain type, e.g. temperatureReadings[].
+    data_type: the type of reading, e.g. "temperature".
+    """
+    data = []
+    dates = []
+    
+    for i in data_collection:
+        if data_type.lower() == "accelerometer":
+            data.append([i["x"], i["y"], i["z"]])
+        else:
+            data.append(i[data_type])
+
+        dt_date = convert_timestamp_format(i["timestamp"])
+        date = matplotlib.dates.date2num(dt_date)
+        dates.append(date)
+
+    return data, dates
+
+
+def calculate_movement(data, dates):
+    """
+    Calculating movement based on accelerometer data and returning plottable data.
+    """
+    raise NotImplementedError
 
 
 def plot_reading(reading, dates):
