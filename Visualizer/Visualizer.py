@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import matplotlib
 import requests
 import datetime as dt
@@ -62,19 +63,22 @@ def get_reading(input):
     return response.json()
 
 
+def convert_datetime(date_time):
+    date_time = date_time.replace("T", " ")
+    date_time = date_time.split("+")
+    return date_time[0]
 
 
 def convert_humidity_dataformat(data):
-    print(data)
     humidity = []
     dates = []
     
-    for i in data[:10]:
-        print(i)
+    for i in data:
         humidity.append(i["humidity"])
-        dt_date = dt.datetime.strptime(i['timestamp'], "%Y/%m/%d %H:%M:%S")
+        converted = convert_datetime(i["timestamp"])
+    
+        dt_date = dt.datetime.strptime(converted, "%Y-%m-%d %H:%M:%S.%f")
         date = matplotlib.dates.date2num(dt_date)
-        #date = i["timestamp"]
         
         dates.append(date)
 
@@ -82,17 +86,39 @@ def convert_humidity_dataformat(data):
 
 
 def plot_reading(reading, dates):
-
-    plt.plot_date(dates, reading)
-    plt.xlabel("Time")
+    fig, ax = plt.subplots()
+    ax.plot(dates, reading)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M:%S"))
     plt.xticks(rotation=10)
+    plt.xlabel("Time")
     plt.ylabel("Humidity")
     plt.show()
 
 
+def get_data():
+    data = [
+        {
+            "id": 0,
+            "timestamp": "2021-11-07T08:59:46.90102+01:00",
+            "humidity": 0,
+            "sensorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        },
+        {
+            "id": 0,
+            "timestamp": "2021-11-07T09:59:46.90102+01:00",
+            "humidity": 1,
+            "sensorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+    ]
+    return data
+
+
 def main():
     #set_reading_type()
-    data = get_reading('tis')
+
+    data = get_data()
+
+    # data = get_reading('tis')
     humidity, dates = convert_humidity_dataformat(data)
     plot_reading(humidity, dates)
     
