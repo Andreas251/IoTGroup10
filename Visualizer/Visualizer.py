@@ -47,13 +47,14 @@ def get_reading(input):
     #structure of the get parameters
     params = {
         'sensorId' : 'E34D3937-65D5-4DE1-A80E-E29F998D8967',
-        'start' : dt.datetime.now() - dt.timedelta(minutes = 40),
-        'end' : dt.datetime.now()
+        'start' :  '2021-11-03 13:41:25.9502560',    #dt.datetime.now() - dt.timedelta(minutes = 40),
+        'end' :   '2021-11-03 13:41:29.9502490'      #dt.datetime.now()
     }
 
 
 
     response = requests.get(url + endpoints['_humReading'],params=params, verify=False)
+    print(dt.datetime.now())
     print(response.status_code)
     print(response.json())
     
