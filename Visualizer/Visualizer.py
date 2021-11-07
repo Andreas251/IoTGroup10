@@ -5,18 +5,7 @@ import requests
 import datetime as dt
 
 url = 'https://localhost:44340/'
-
-endpoints = {
-    '_sensorList' : 'api/Sensor/Sensors',
-    '_accReading' : 'api/Accelerometer/Readings',
-    '_airReading' : 'api/AirPressure/Readings',
-    '_humReading' : 'api/Humidity/Readings',
-    '_tmpReading' : 'api​/Temperature​/Latest',
-    '_tmpReadingSensor': '/api/Temperature/LatestBySensor',
-    '_tmpReadingTime': '/api/Temperature/ReadingsByTime'
-}
-
-
+sensor_endpoint = url + 'api/Sensor/Sensors'
 
 
 def set_reading_type():
@@ -46,58 +35,49 @@ def set_reading_type():
     user_inputs["latest_by_sensor"] = input('Do you want data from a specific sensor? (y/n): ').lower() # check input
 
     if user_inputs["latest_by_sensor"].lower() == "y":
-        #Print sensors
-        user_inputs["sensor_id"] = input('Input desired sensorId: ').lower()
+        response = requests.get(sensor_endpoint, verify=False).json()
+        x = 1
 
-    
-    
+        for i in response:
+            print(str(x) + ": " + str(i))
+            x = x + 1
 
-    
-    
+        chosen_sensor_id = input('Input desired sensor: ')
+        user_inputs["sensor_id"] = response[chosen_sensor_id - 1]
 
     return user_inputs
 
 
-def get_reading(input):
-    
-    #structure of the get parameters
-    params = {
-        'sensorId' : 'E34D3937-65D5-4DE1-A80E-E29F998D8967',
-        'start' :  '2021-11-03 13:41:25.9502560',    #dt.datetime.now() - dt.timedelta(minutes = 40),
-        'end' :   '2021-11-03 13:41:29.9502490'      #dt.datetime.now()
-    }
+def get_reading(user_inputs):
+    endpoint = "/api"
+    params = {}
 
-    response = requests.get(url + endpoints['_humReading'],params=params, verify=False)
-    print(dt.datetime.now())
-    print(response.status_code)
-    print(response.json())
+    endpoint = endpoint + "/" + user_inputs["type_of_reading"]
+    if user_inputs["latest"].lower() == "y":
+        if user_inputs["latest_by_sensor"].lower() == "y":
+            endpoint = endpoint + "/LatestBySensor"
+            params["sensorId"] = user_inputs["sensor_id"]
+        else:
+            endpoint = endpoint + "/Latest"
+    else:
+        endpoint = endpoint + "/ReadingsByTime"
+        params["sensorId"] = user_inputs["sensor_id"]
+        params["start"] = user_inputs["start_time"]
+        params["end"] = user_inputs["end_time"]
+
+    #structure of the get parameters
+    # params = {
+    #     'sensorId' : 'E34D3937-65D5-4DE1-A80E-E29F998D8967',
+    #     'start' :  '2021-11-03 13:41:25.9502560',    #dt.datetime.now() - dt.timedelta(minutes = 40),
+    #     'end' :   '2021-11-03 13:41:29.9502490'      #dt.datetime.now()
+    # }
+
+    response = requests.get(url + endpoint, params=params, verify=False)
     
     return response.json()
 
 
-def convert_timestamp_format_old(date_time): # TODO: Remove when new works
-    date_time = date_time.replace("T", " ")
-    date_time = date_time.split("+")
-    return date_time[0]
-
-
-def convert_humidity_dataformat(data): # TODO: Remove when general function works
-    humidity = []
-    dates = []
-    
-    for i in data:
-        humidity.append(i["humidity"])
-        converted = convert_timestamp_format_old(i["timestamp"])
-    
-        dt_date = dt.datetime.strptime(converted, "%Y-%m-%d %H:%M:%S.%f")
-        date = matplotlib.dates.date2num(dt_date)
-        
-        dates.append(date)
-
-    return humidity, dates
-
-
-def convert_timestamp_format(timestamp): # TESTED - With Humidity
+def convert_timestamp_format(timestamp):
     """
     Converts timestamp from string of C# DateTimeOffset received from the API to Python datetime.
     """
@@ -107,53 +87,50 @@ def convert_timestamp_format(timestamp): # TESTED - With Humidity
     return dt_date
 
 
-def convert_dataformat(data_collection, data_type): # TESTED - With Humidity
+def convert_dataformat(data_collection, data_type):
     """
     data_collection: array of readings of a certain type, e.g. temperatureReadings[].
     data_type: the type of reading, e.g. "temperature".
     """
     data = []
-    dates = []
+    timestamps = []
     
     for i in data_collection:
         if data_type.lower() == "accelerometer":
-            data.append([i["x"], i["y"], i["z"]])
+            speed = calculate_speed([i["x"], i["y"], i["z"]], i["timestamp"])
+            data.append(speed)
         else:
             data.append(i[data_type])
 
         dt_date = convert_timestamp_format(i["timestamp"])
-        date = matplotlib.dates.date2num(dt_date)
-        dates.append(date)
+        timestamp = matplotlib.dates.date2num(dt_date)
+        timestamps.append(timestamp)
 
-    return data, dates
+    return data, timestamps
 
 
-def calculate_movement(data, dates):
+def calculate_speed(data, timestamp):
     """
     Calculating movement based on accelerometer data and returning plottable data.
     """
     raise NotImplementedError
 
 
-def plot_reading(reading, dates):
-    fig, ax = plt.subplots()
-    ax.plot(dates, reading)
+def plot_reading(reading, timestamps, data_type: str):
+    ax = plt.subplots()
+    ax.plot(timestamps, reading)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M:%S"))
     plt.xticks(rotation=10)
     plt.xlabel("Time")
-    plt.ylabel("Humidity")
+    plt.ylabel(data_type.capitalize())
     plt.show()
 
 
 def main():
-    endpoint, reading = set_reading_type()
-
-    data = get_reading(endpoint)
-    humidity, dates = convert_dataformat(data,reading)
-    plot_reading(humidity, dates)
-    
-    return 0
-
+    user_inputs = set_reading_type()
+    response = get_reading(user_inputs)
+    data, timestamp = convert_dataformat(response, user_inputs["type_of_reading"])
+    plot_reading(data, timestamp, user_inputs["type_of_reading"])
 
 
 if __name__ == "__main__":
