@@ -19,7 +19,7 @@ endpoints = {
 def set_reading_type():
     
     user_input = ''
-    type_of_reading = ''
+    reading_endpoint = ''
 
     print('--- Types of available readings ---\n')
     print('- Accelerometer \n')
@@ -30,21 +30,21 @@ def set_reading_type():
     user_input = input('Input desired reading: ').lower()
     
     if(user_input == 'accelerometer'):
-        type_of_reading = endpoints['_accReading']
+        reading_endpoint = endpoints['_accReading']
     elif(user_input == 'airpressure'):
-        type_of_reading = endpoints['_airReading']
+        reading_endpoint = endpoints['_airReading']
     elif(user_input == 'humidity'):
-        type_of_reading = endpoints['_humReading']
+        reading_endpoint = endpoints['_humReading']
     elif(user_input == 'temperature'):
-        type_of_reading = endpoints['_tmpReading']
+        reading_endpoint = endpoints['_tmpReading']
     else:
-        type_of_reading = 'default'
+        reading_endpoint = 'default'
 
-    return type_of_reading
+    return reading_endpoint, user_input
 
 
 def get_reading(input):
-
+    
     #structure of the get parameters
     params = {
         'sensorId' : 'E34D3937-65D5-4DE1-A80E-E29F998D8967',
@@ -82,7 +82,7 @@ def convert_humidity_dataformat(data): # TODO: Remove when general function work
     return humidity, dates
 
 
-def convert_timestamp_format(timestamp): # NOT TESTED
+def convert_timestamp_format(timestamp): # TESTED - With Humidity
     """
     Converts timestamp from string of C# DateTimeOffset received from the API to Python datetime.
     """
@@ -92,7 +92,7 @@ def convert_timestamp_format(timestamp): # NOT TESTED
     return dt_date
 
 
-def convert_dataformat(data_collection, data_type): # NOT TESTED
+def convert_dataformat(data_collection, data_type): # TESTED - With Humidity
     """
     data_collection: array of readings of a certain type, e.g. temperatureReadings[].
     data_type: the type of reading, e.g. "temperature".
@@ -130,31 +130,11 @@ def plot_reading(reading, dates):
     plt.show()
 
 
-def get_data():
-    data = [
-        {
-            "id": 0,
-            "timestamp": "2021-11-07T08:59:46.90102+01:00",
-            "humidity": 0,
-            "sensorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-        },
-        {
-            "id": 0,
-            "timestamp": "2021-11-07T09:59:46.90102+01:00",
-            "humidity": 1,
-            "sensorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-        }
-    ]
-    return data
-
-
 def main():
-    #set_reading_type()
+    endpoint, reading = set_reading_type()
 
-    data = get_data()
-
-    # data = get_reading('tis')
-    humidity, dates = convert_humidity_dataformat(data)
+    data = get_reading(endpoint)
+    humidity, dates = convert_dataformat(data,reading)
     plot_reading(humidity, dates)
     
     return 0
