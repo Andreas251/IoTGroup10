@@ -45,8 +45,8 @@ def set_reading_type():
             x = x + 1
 
         chosen_sensor_id = input('Input desired sensor: ')
-        user_inputs["sensor_id"] = response[chosen_sensor_id - 1]
-
+        user_inputs["sensor_id"] = response[int(chosen_sensor_id) - 1]
+        print(user_inputs["sensor_id"])
     return user_inputs
 
 
@@ -96,7 +96,11 @@ def convert_dataformat(data_collection, data_type):
     """
     data = []
     timestamps = []
-    
+    print(data_collection)
+
+    if not isinstance(data_collection, list):
+        data_collection = [data_collection]
+
     for i in data_collection:
         if data_type.lower() == "accelerometer":
             speed = calculate_speed([i["x"], i["y"], i["z"]], i["timestamp"])
@@ -119,7 +123,9 @@ def calculate_speed(data, timestamp):
 
 
 def plot_reading(reading, timestamps, data_type: str):
-    ax = plt.subplots()
+    fig, ax = plt.subplots()
+    print(timestamps)
+    print(reading)
     ax.plot(timestamps, reading)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M:%S"))
     plt.xticks(rotation=10)

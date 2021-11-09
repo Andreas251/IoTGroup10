@@ -41,7 +41,7 @@ namespace IoT_REST_API.Controllers
         }
 
         [HttpGet]
-        [Route("Readings")]
+        [Route("ReadingsByTime")]
         public IEnumerable<AccelerometerReading> GetReadingsByTime(Guid? sensorId, DateTime start, DateTime end)
         {
             return _context.AccelerometerReadings.ReadingsWithinRange(sensorId, start, end);
