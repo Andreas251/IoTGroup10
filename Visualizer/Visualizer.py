@@ -35,7 +35,9 @@ def set_reading_type():
     user_inputs["latest_by_sensor"] = input('Do you want data from a specific sensor? (y/n): ').lower() # check input
 
     if user_inputs["latest_by_sensor"].lower() == "y":
-        response = requests.get(sensor_endpoint, verify=False).json()
+        response = requests.get(sensor_endpoint, verify=False)
+        print(response)
+        response = response.json()
         x = 1
 
         for i in response:
@@ -49,7 +51,7 @@ def set_reading_type():
 
 
 def get_reading(user_inputs):
-    endpoint = "/api"
+    endpoint = "api"
     params = {}
 
     endpoint = endpoint + "/" + user_inputs["type_of_reading"]
