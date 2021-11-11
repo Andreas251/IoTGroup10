@@ -126,7 +126,7 @@ def plot_reading(reading, timestamps, data_type: str):
     fig, ax = plt.subplots()
     print(timestamps)
     print(reading)
-    ax.plot(timestamps, reading)
+    ax.plot(timestamps, reading, marker=".")
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M:%S"))
     plt.xticks(rotation=10)
     plt.xlabel("Time")
