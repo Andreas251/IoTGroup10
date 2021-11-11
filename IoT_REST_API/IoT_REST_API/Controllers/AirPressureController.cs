@@ -28,15 +28,14 @@ namespace IoT_REST_API.Controllers
         [Route("Latest")]
         public AirpressureReading GetLatestReading()
         {
-            return _context.AirpressureReadings.OrderByDescending(p => p.Timestamp).FirstOrDefault();
+            return _context.AirpressureReadings.LatestReading(null);
         }
 
         [HttpGet]
         [Route("LatestBySensor")]
         public AirpressureReading GetLatestReadingBySensor(Guid sensorId)
         {
-            var reading = _context.AirpressureReadings.Where(p => p.SensorId == sensorId).OrderByDescending(p => p.Timestamp).FirstOrDefault();
-            return reading;
+            return _context.AirpressureReadings.LatestReading(sensorId);
         }
 
         [HttpGet]

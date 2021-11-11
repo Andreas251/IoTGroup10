@@ -29,15 +29,14 @@ namespace IoT_REST_API.Controllers
         [Route("Latest")]
         public AccelerometerReading GetLatestReading()
         {
-            return _context.AccelerometerReadings.OrderByDescending(p => p.Timestamp).FirstOrDefault();
+            return _context.AccelerometerReadings.LatestReading(null);
         }
 
         [HttpGet]
         [Route("LatestBySensor")]
         public AccelerometerReading GetLatestReadingBySensor(Guid sensorId)
         {
-            var reading = _context.AccelerometerReadings.Where(p => p.SensorId == sensorId).OrderByDescending(p => p.Timestamp).FirstOrDefault();
-            return reading;
+            return _context.AccelerometerReadings.LatestReading(sensorId);
         }
 
         [HttpGet]

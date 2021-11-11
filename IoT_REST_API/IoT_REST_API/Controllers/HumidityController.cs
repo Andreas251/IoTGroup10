@@ -28,15 +28,14 @@ namespace IoT_REST_API.Controllers
         [Route("Latest")]
         public HumidityReading GetLatestReading()
         {
-            return _context.HumidityReadings.OrderByDescending(p => p.Timestamp).FirstOrDefault();
+            return _context.HumidityReadings.LatestReading(null);
         }
 
         [HttpGet]
         [Route("LatestBySensor")]
         public HumidityReading GetLatestReadingBySensor(Guid sensorId)
         {
-            var reading = _context.HumidityReadings.Where(p => p.SensorId == sensorId).OrderByDescending(p => p.Timestamp).FirstOrDefault();
-            return reading;
+            return _context.HumidityReadings.LatestReading(sensorId);
         }
 
         [HttpGet]

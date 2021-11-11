@@ -21,5 +21,17 @@ namespace IoT_REST_API.Extensions
                 return readingsWithinRange;
             }
         }
+
+        public static T LatestReading<T>(this IQueryable<T> t, Guid? sensorId) where T : Reading
+        {
+            if(sensorId == null)
+            {
+                return t.OrderByDescending(p => p.Timestamp).FirstOrDefault();
+            }
+            else
+            {
+                return t.Where(p => p.SensorId == sensorId).OrderByDescending(p => p.Timestamp).FirstOrDefault();
+            }
+        }
     }
 }

@@ -28,15 +28,14 @@ namespace IoT_REST_API.Controllers
         [Route("Latest")]
         public TemperatureReading GetLatestReading()
         {
-            return _context.TemperatureReadings.OrderByDescending(p => p.Timestamp).FirstOrDefault();
+            return _context.TemperatureReadings.LatestReading(null);
         }
 
         [HttpGet]
         [Route("LatestBySensor")]
         public TemperatureReading GetLatestReadingBySensor(Guid sensorId)
         {
-            var reading = _context.TemperatureReadings.Where(p => p.SensorId == sensorId).OrderByDescending(p => p.Timestamp).FirstOrDefault();
-            return reading;
+            return _context.TemperatureReadings.LatestReading(sensorId);
         }
 
         [HttpGet]
