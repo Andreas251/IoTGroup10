@@ -24,7 +24,14 @@ namespace IoT_REST_API.Controllers
         [Route("Sensors")]
         public IEnumerable<Guid> GetAvailableSensors()
         {
-            return _context.TemperatureReadings.Select(p => p.SensorId).Distinct();
+            var temperatureGuids = _context.TemperatureReadings.Select(p => p.SensorId);
+            var airpressureGuids = _context.AirpressureReadings.Select(p => p.SensorId);
+            var humidityGuids = _context.HumidityReadings.Select(p => p.SensorId);
+            var accelerometerGuids = _context.AccelerometerReadings.Select(p => p.SensorId);
+
+            var allGuids = temperatureGuids.Concat(airpressureGuids).Concat(humidityGuids).Concat(accelerometerGuids);
+
+            return allGuids.Distinct();
         }
     }
 }
