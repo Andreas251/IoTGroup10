@@ -1,11 +1,15 @@
+from json import detect_encoding
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib
 import requests
 import datetime as dt
+import urllib3
+urllib3.disable_warnings()
 
 url = 'https://localhost:44340/'
 sensor_endpoint = url + 'api/Sensor/Sensors'
+valid_sensors = ("temperature", "airpressure", "humidity", "accelerometer")
 
 
 def set_reading_type():
@@ -24,19 +28,28 @@ def set_reading_type():
     print('- Humidity \n')
     print('- Temperature \n')
     print('-----------------------------------\n')
-    user_inputs["type_of_reading"] = input('Input desired reading: ').lower()
+    while user_inputs["type_of_reading"].lower() not in valid_sensors:
+        user_inputs["type_of_reading"] = input('Input desired reading: ').lower()
+        if user_inputs["type_of_reading"].lower() not in valid_sensors:
+            print("Invalid value. Was: " + user_inputs["type_of_reading"] + ". Must be one of " + str(valid_sensors))
 
-    user_inputs["latest"] = input('Do you want latest data? (y/n): ').lower() # check input
-
+    while user_inputs["latest"] not in ("y", "n"):
+        user_inputs["latest"] = input('Do you want latest data? (y/n): ').lower()
+        if user_inputs["latest"] not in ("y", "n"):
+            print("Your input was not valid. Must be 'y' or 'n'.")
+    
     if user_inputs["latest"].lower() == "n":
-        user_inputs["start_time"] = input('Input desired start time of reading: ').lower() # check input
-        user_inputs["end_time"] = input('Input desired end time of reading: ').lower() # check input
+        user_inputs["start_time"] = input('Input desired start time of reading in format "YYYY-MM-DD HH:MM": ').lower() # check input
+        user_inputs["end_time"] = input('Input desired end time of reading in format "YYYY-MM-DD HH:MM": ').lower() # check input
 
-    user_inputs["latest_by_sensor"] = input('Do you want data from a specific sensor? (y/n): ').lower() # check input
+
+    while user_inputs["latest_by_sensor"] not in ("y", "n"):
+        user_inputs["latest_by_sensor"] = input('Do you want data from a specific sensor? (y/n): ').lower()
+        if user_inputs["latest_by_sensor"] not in ("y", "n"):
+            print("Your input was not valid. Must be 'y' or 'n'.")
 
     if user_inputs["latest_by_sensor"].lower() == "y":
         response = requests.get(sensor_endpoint, verify=False)
-        print(response)
         response = response.json()
         x = 1
 
@@ -46,7 +59,6 @@ def set_reading_type():
 
         chosen_sensor_id = input('Input desired sensor: ')
         user_inputs["sensor_id"] = response[int(chosen_sensor_id) - 1]
-        print(user_inputs["sensor_id"])
     return user_inputs
 
 
@@ -96,7 +108,6 @@ def convert_dataformat(data_collection, data_type):
     """
     data = []
     timestamps = []
-    print(data_collection)
 
     if not isinstance(data_collection, list):
         data_collection = [data_collection]
@@ -124,8 +135,6 @@ def calculate_speed(data, timestamp):
 
 def plot_reading(reading, timestamps, data_type: str):
     fig, ax = plt.subplots()
-    print(timestamps)
-    print(reading)
     ax.plot(timestamps, reading, marker=".")
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M:%S"))
     plt.xticks(rotation=10)
