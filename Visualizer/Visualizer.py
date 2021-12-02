@@ -39,9 +39,8 @@ def set_reading_type():
             print("Your input was not valid. Must be 'y' or 'n'.")
     
     if user_inputs["latest"].lower() == "n":
-        user_inputs["start_time"] = input('Input desired start time of reading in format "YYYY-MM-DD HH:MM": ').lower() # check input
-        user_inputs["end_time"] = input('Input desired end time of reading in format "YYYY-MM-DD HH:MM": ').lower() # check input
-
+        user_inputs["start_time"] = get_time_input('Input desired start time of reading in format "YYYY-MM-DD HH:MM": ')
+        user_inputs["end_time"] = get_time_input('Input desired end time of reading in format "YYYY-MM-DD HH:MM": ')
 
     while user_inputs["latest_by_sensor"] not in ("y", "n"):
         user_inputs["latest_by_sensor"] = input('Do you want data from a specific sensor? (y/n): ').lower()
@@ -60,6 +59,16 @@ def set_reading_type():
         chosen_sensor_id = input('Input desired sensor: ')
         user_inputs["sensor_id"] = response[int(chosen_sensor_id) - 1]
     return user_inputs
+
+
+def get_time_input(string: str):
+    try:
+        user_input = input(string).lower()
+        dt.datetime.strptime(user_input, '%Y-%m-%d %H:%M')
+    except ValueError:
+        print("Invalid input")
+        user_input = get_time_input(string)
+    return user_input
 
 
 def get_reading(user_inputs):
