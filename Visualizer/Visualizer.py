@@ -5,6 +5,7 @@ import matplotlib
 import requests
 import datetime as dt
 import urllib3
+import numpy as np
 urllib3.disable_warnings()
 
 url = 'https://localhost:44340/'
@@ -142,13 +143,21 @@ def calculate_speed(data, timestamp):
     raise NotImplementedError
 
 
-def plot_reading(reading, timestamps, data_type: str):
+def plot_reading(reading, timestamps, data_type: str, plot_mean = False):
+
+    
+
+
     fig, ax = plt.subplots()
-    ax.plot(timestamps, reading, marker=".")
+    ax.plot(timestamps, reading, marker=".", label="Reading")
+    if plot_mean:
+        mean = [np.mean(reading)]*len(timestamps)
+        mean_line = ax.plot(timestamps, mean, label='Mean', linestyle='--')
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M:%S"))
     plt.xticks(rotation=10)
     plt.xlabel("Time")
     plt.ylabel(data_type.capitalize())
+    plt.legend()
     plt.show()
 
 
@@ -156,7 +165,7 @@ def main():
     user_inputs = set_reading_type()
     response = get_reading(user_inputs)
     data, timestamp = convert_dataformat(response, user_inputs["type_of_reading"])
-    plot_reading(data, timestamp, user_inputs["type_of_reading"])
+    plot_reading(data, timestamp, user_inputs["type_of_reading"], plot_mean=True)
 
 
 if __name__ == "__main__":
