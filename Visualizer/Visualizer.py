@@ -196,7 +196,7 @@ def animate(i):
         plt.xlabel("Time of Reading", labelpad=5)
         plt.xticks(rotation=10)
 
-        plt.title("Live " + animation_input["type_of_reading"].capitalize() + " Reading", pad=10)
+        plt.title("Live " + animation_input["type_of_reading"].capitalize() + " Reading", pad=10, fontsize=12, fontweight='demibold')
 
         plt.plot(animated_x,animated_y, marker = 'o', label='Reading')
 
