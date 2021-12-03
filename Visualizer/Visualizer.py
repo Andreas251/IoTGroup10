@@ -5,6 +5,7 @@ import matplotlib
 import requests
 import datetime as dt
 import urllib3
+import matplotlib.animation as animation
 import numpy as np
 urllib3.disable_warnings()
 
@@ -20,7 +21,8 @@ def set_reading_type():
         "latest": "", # y/n
         "latest_by_sensor": "", # y/n
         "start_time": "",
-        "end_time": ""
+        "end_time": "",
+        "live_update" : ""
     }
 
     print('--- Types of available readings ---\n')
@@ -39,6 +41,12 @@ def set_reading_type():
         if user_inputs["latest"] not in ("y", "n"):
             print("Your input was not valid. Must be 'y' or 'n'.")
     
+    if user_inputs["latest"].lower() == "y":
+        while user_inputs["live_update"] not in ("y", "n"):
+            user_inputs["live_update"] = input('Do you want live data? (y/n): ').lower()
+            if user_inputs["live_update"] not in ("y", "n"):
+                print("Your input was not valid. Must be 'y' or 'n'.")
+
     if user_inputs["latest"].lower() == "n":
         user_inputs["start_time"] = get_time_input('Input desired start time of reading in format "YYYY-MM-DD HH:MM": ')
         user_inputs["end_time"] = get_time_input('Input desired end time of reading in format "YYYY-MM-DD HH:MM": ')
@@ -145,9 +153,6 @@ def calculate_speed(data, timestamp):
 
 def plot_reading(reading, timestamps, data_type: str, plot_mean = False):
 
-    
-
-
     fig, ax = plt.subplots()
     ax.plot(timestamps, reading, marker=".", label="Reading")
     if plot_mean:
@@ -160,12 +165,67 @@ def plot_reading(reading, timestamps, data_type: str, plot_mean = False):
     plt.legend()
     plt.show()
 
+def init_animation():
+    plt.title("Live " + animation_input["type_of_reading"].capitalize() + " Reading")
+    plt.plot(animated_x,animated_y)
+    plt.ylabel(animation_input["type_of_reading"].capitalize())
+    plt.xlabel("Time of Reading")
+    plt.xticks(rotation=10)
+
+def animate(i):
+    response = get_reading(animation_input)
+
+    if not response['id'] in last_response:
+
+        last_response[0] = response['id']
+        print(response)
+
+        data, timestamp = convert_dataformat(response, animation_input["type_of_reading"])
+        
+
+        animated_x.append(timestamp)
+        animated_y.append(data)
+
+        print(animated_y)
+
+        plt.cla()
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M:%S"))
+        plt.gca().spines['top'].set_visible(False)
+        plt.gca().spines['right'].set_visible(False)
+        plt.ylabel(animation_input["type_of_reading"].capitalize(), labelpad=5)
+        plt.xlabel("Time of Reading", labelpad=5)
+        plt.xticks(rotation=10)
+
+        plt.title("Live " + animation_input["type_of_reading"].capitalize() + " Reading", pad=10)
+
+        plt.plot(animated_x,animated_y, marker = 'o', label='Reading')
+
+        mean = [np.mean(animated_y)]*len(animated_x)
+            
+        mean_line = plt.plot(animated_x, mean, label='Mean', linestyle='--')
+
+        plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), frameon=False)
+
 
 def main():
     user_inputs = set_reading_type()
-    response = get_reading(user_inputs)
-    data, timestamp = convert_dataformat(response, user_inputs["type_of_reading"])
-    plot_reading(data, timestamp, user_inputs["type_of_reading"], plot_mean=True)
+
+    if user_inputs["live_update"].lower() == 'y' and user_inputs["latest"].lower() == 'y':
+        global animation_input
+        global animated_x
+        global animated_y
+        global last_response
+        last_response = [0]
+        animated_x = []
+        animated_y = []
+        animation_input = user_inputs
+        live_dat = animation.FuncAnimation(plt.gcf(), animate,init_func=init_animation, interval=30000)
+        plt.gcf().set_size_inches(15,8)
+        plt.show()
+    else:
+        response = get_reading(user_inputs)
+        data, timestamp = convert_dataformat(response, user_inputs["type_of_reading"])
+        plot_reading(data, timestamp, user_inputs["type_of_reading"], plot_mean=True)
 
 
 if __name__ == "__main__":
