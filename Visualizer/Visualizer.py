@@ -97,13 +97,6 @@ def get_reading(user_inputs):
         params["start"] = user_inputs["start_time"]
         params["end"] = user_inputs["end_time"]
 
-    #structure of the get parameters
-    # params = {
-    #     'sensorId' : 'E34D3937-65D5-4DE1-A80E-E29F998D8967',
-    #     'start' :  '2021-11-03 13:41:25.9502560',    #dt.datetime.now() - dt.timedelta(minutes = 40),
-    #     'end' :   '2021-11-03 13:41:29.9502490'      #dt.datetime.now()
-    # }
-
     response = requests.get(url + endpoint, params=params, verify=False)
     
     return response.json()
@@ -151,8 +144,7 @@ def calculate_speed(data, timestamp):
     raise NotImplementedError
 
 
-def plot_reading(reading, timestamps, data_type: str, plot_mean = False):
-
+def plot_reading(reading, timestamps, data_type: str, sensor_id, plot_mean = False):
     fig, ax = plt.subplots()
     ax.plot(timestamps, reading, marker=".", label="Reading")
     if plot_mean:
@@ -162,8 +154,10 @@ def plot_reading(reading, timestamps, data_type: str, plot_mean = False):
     plt.xticks(rotation=10)
     plt.xlabel("Time")
     plt.ylabel(data_type.capitalize())
+    plt.title(data_type.capitalize() + " Reading\nSensor ID: " + str(sensor_id))
     plt.legend()
     plt.show()
+
 
 def init_animation():
     plt.title("Live " + animation_input["type_of_reading"].capitalize() + " Reading")
@@ -172,8 +166,10 @@ def init_animation():
     plt.xlabel("Time of Reading")
     plt.xticks(rotation=10)
 
+
 def animate(i):
     response = get_reading(animation_input)
+    sensor_id = response["sensorId"]
 
     if not response['id'] in last_response:
 
@@ -196,7 +192,7 @@ def animate(i):
         plt.xlabel("Time of Reading", labelpad=5)
         plt.xticks(rotation=10)
 
-        plt.title("Live " + animation_input["type_of_reading"].capitalize() + " Reading", pad=10, fontsize=12, fontweight='demibold')
+        plt.title("Live " + animation_input["type_of_reading"].capitalize() + " Reading\nSensor ID: " + str(sensor_id), pad=10, fontsize=12, fontweight='demibold')
 
         plt.plot(animated_x,animated_y, marker = 'o', label='Reading')
 
@@ -228,8 +224,10 @@ def main():
         plt.show()
     else:
         response = get_reading(user_inputs)
+        sensor_id = response["sensorId"]
+
         data, timestamp = convert_dataformat(response, user_inputs["type_of_reading"])
-        plot_reading(data, timestamp, user_inputs["type_of_reading"], plot_mean=True)
+        plot_reading(data, timestamp, user_inputs["type_of_reading"], sensor_id, plot_mean=True)
 
 
 if __name__ == "__main__":
