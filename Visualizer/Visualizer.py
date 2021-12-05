@@ -201,8 +201,12 @@ def animate(i):
         plt.plot(animated_x,animated_y, marker = 'o', label='Reading')
 
         mean = [np.mean(animated_y)]*len(animated_x)
+        max = [np.amax(animated_y)]*len(animated_x)
+        min = [np.amin(animated_y)]*len(animated_x)
             
         mean_line = plt.plot(animated_x, mean, label='Mean', linestyle='--')
+        max_line = plt.plot(animated_x, max, label='Max', linestyle='--')
+        min_line = plt.plot(animated_x, min, label='Min', linestyle='--')
 
         plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), frameon=False)
 
