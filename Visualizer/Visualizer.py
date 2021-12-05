@@ -146,16 +146,25 @@ def calculate_speed(data, timestamp):
 
 def plot_reading(reading, timestamps, data_type: str, sensor_id, plot_mean = False):
     fig, ax = plt.subplots()
+    fig.set_size_inches(15,8)
     ax.plot(timestamps, reading, marker=".", label="Reading")
     if plot_mean:
         mean = [np.mean(reading)]*len(timestamps)
         mean_line = ax.plot(timestamps, mean, label='Mean', linestyle='--')
+    
+    max = [np.amax(reading)]*len(timestamps)
+    min = [np.amin(reading)]*len(timestamps)
+    max_line = ax.plot(timestamps, max, label='Max', linestyle='--')
+    min_line = ax.plot(timestamps, min, label='Min', linestyle='--')
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M:%S"))
+
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
     plt.xticks(rotation=10)
     plt.xlabel("Time")
     plt.ylabel(data_type.capitalize())
-    plt.title(data_type.capitalize() + " Reading\nSensor ID: " + str(sensor_id))
-    plt.legend()
+    plt.title(data_type.capitalize() + " Reading\nSensor ID: " + str(sensor_id),pad=10, fontsize=12, fontweight='demibold')
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), frameon=False)
     plt.show()
 
 
@@ -224,7 +233,7 @@ def main():
         plt.show()
     else:
         response = get_reading(user_inputs)
-        sensor_id = response["sensorId"]
+        sensor_id = response[0]["sensorId"]
 
         data, timestamp = convert_dataformat(response, user_inputs["type_of_reading"])
         plot_reading(data, timestamp, user_inputs["type_of_reading"], sensor_id, plot_mean=True)
