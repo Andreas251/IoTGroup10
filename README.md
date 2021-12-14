@@ -9,7 +9,9 @@
 2. Prepare one or more local computers for running the database, API and Vizualiser
 3. Use EF Core to migrate the database contained within the */IoT_REST_API/IoT_REST_API* folder
     1. This can be done via the following command in the command prompt, if .NET EF Core CLI is installed 
-            dotnet ef database update
+
+        dotnet ef database update
+
     2. The command prompt will output "***Done***" when finished creating the database. The prompt can sometimes freeze here, if that happens, then just close the prompt since we no longer need it.
 4. Run the REST API solution (File: *\IoT_REST_API\IoT_REST_API.sln*), e.g. via Visual Studio 2019.
 5. Run the Raspberry Pi with the code transfered in step 1.
