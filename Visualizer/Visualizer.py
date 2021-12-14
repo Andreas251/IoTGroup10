@@ -1,4 +1,5 @@
 from json import detect_encoding
+from typing import List
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib
@@ -233,7 +234,11 @@ def main():
         plt.show()
     else:
         response = get_reading(user_inputs)
-        sensor_id = response[0]["sensorId"]
+        
+        if type(response) == list:
+            sensor_id = response[0]["sensorId"]
+        else:
+            sensor_id = response["sensorId"]
 
         data, timestamp = convert_dataformat(response, user_inputs["type_of_reading"])
         plot_reading(data, timestamp, user_inputs["type_of_reading"], sensor_id, plot_mean=True)
