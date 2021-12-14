@@ -18,4 +18,4 @@
 4. Run the REST API solution (File: *\IoT_REST_API\IoT_REST_API.sln*), e.g. via Visual Studio 2019.
 5. Run the Raspberry Pi with the code transfered in *step 1*.
 6. Run the Visualizer with Python version >=3.7.4 (File: *\Visualizer\Visualizer.py*)
-7. If all of these previous steps have been done, then the Visualizer.py that was just opened should be outputting the measured data with 1 minute intervals. For faster intervals, you need to go in and change the settings in the code transfered to the Raspberry Pi from the Raspberry folder.
+7. If all of these previous steps have been done, then the Visualizer.py that was just opened should be outputting the measured data with 1 minute intervals. For faster intervals, you need to go in and change the settings in the code transfered to the Raspberry Pi from the Raspberry folder. For a faster live data update the intervals in the Matplotlib Animator should also be changed to match the half of what the interval of the RPI is set to. 
