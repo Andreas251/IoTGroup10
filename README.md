@@ -3,12 +3,8 @@
 
 **Group**: 10
 
-**Members**: 
-*Andreas Larsen Engholm,*
-*Andreas Vorgaard,*
-*Jesper Strøm,*
-*Simon Zacher Høholt Jensen,*
-*Tobias Sandø Lund*
+**Group members/developers/authors**: 
+*Andreas Larsen Engholm, Andreas Vorgaard, Jesper Strøm, Simon Zacher Høholt Jensen and Tobias Sandø Lund*
 
 # Step-by-step guide to setting up the system
 1. Transfer the code from the Raspberry folder to the Raspberry Pi
