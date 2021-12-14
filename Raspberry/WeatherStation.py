@@ -10,7 +10,10 @@ from MqttClient import MqqtClient
 #### Averages over 19 minutes
 # Avg time awake: 0.08890010573663619
 # Avg duty cycle: 0.0014816684289439368
-# measurement format in mqtt: {"timestamp": "2021-10-27 09:30:12.172813", "value": 34.1219596862793}
+
+### Average over MANY MINUTES (dont know how many, hours!)
+#   Time awake: 0.0679417299979832, average: 0.08507084682724722
+#   Duty cycle: 0.0011323621666330533, average:0.001417847447120787
 
 class TopicURI(Enum):
     Root = "iot_grp10"
@@ -18,8 +21,8 @@ class TopicURI(Enum):
     HumidityURI =       Root + "/humidity"
     AirPressureURI =    Root + "/airpressure"
     AccelerometerURI =  Root + "/accelerometer"
-    GyroscopeURI =      Root + "/gyroscope"
-    MagnetometerURI =   Root + "/magnetometer"
+    GyroscopeURI =      Root + "/gyroscope"     # not used
+    MagnetometerURI =   Root + "/magnetometer"  # not used
 
 class Measurement:
     def __init__(self, sensor_id, val) -> None:
@@ -32,7 +35,7 @@ def main():
     sensor_id = str(uuid.uuid4())
     sensors = SensorController()
     client = MqqtClient()
-    period = 60
+    period = 60 # Seconds
 
     cum_runtime = 0
     cum_duty_cycle = 0
@@ -48,7 +51,6 @@ def main():
         humidity = Measurement(sensor_id, sensors.get_humidity())
         accel = Measurement(sensor_id, sensors.get_acceleration())
 
-        # TODO: QOS er altid 0, kan ændres hvis ønsket (forhåbentligt)
         ### Publish
         client.publish(TopicURI.TemperatureURI.value, json.dumps(temp.__dict__))
         client.publish(TopicURI.AirPressureURI.value, json.dumps(pressure.__dict__))
@@ -57,6 +59,7 @@ def main():
 
         t1 = perf_counter()
 
+        ### "Duty cycle" of measurement & publish. 
         runtime = t1 - t0
         loops += 1
 

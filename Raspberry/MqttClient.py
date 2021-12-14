@@ -5,6 +5,7 @@ class MqqtClient:
         pw = "Faelles123kode098"
         username = "iotgrp10"
         mqqt_uri = "626582a1d37a4c9da269c096cf520060.s1.eu.hivemq.cloud"
+        
         client = mqtt.Client()
         client.on_connect = self.on_connect
         client.on_message = self.on_message
@@ -14,7 +15,7 @@ class MqqtClient:
         self.client = client
     
     def publish(self, topic, val):
-        self.client.publish(topic, val)
+        self.client.publish(topic, val, qos=0)
 
     # The callback for when the client receives a CONNACK response from the server.
     def on_connect(self, client, userdata, flags, rc):
